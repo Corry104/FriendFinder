@@ -3,7 +3,7 @@
 // We need to include the path package to get the correct file path for our html
 // ===============================================================================
 var path = require("path");
-var friends = require("../app/data/friends.js");
+var friends = require('friendsData');
 var express = require("express");
 var app = express();
 

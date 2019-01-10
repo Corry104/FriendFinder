@@ -2,7 +2,7 @@ var express = require("express");
 
 var app = express();
 
-var friends = require("./app/data/friends");
+var friends = require("friendsData");
 
 // Sets an initial port. We"ll use this later in our listener
 var PORT = process.env.PORT || 8080;
