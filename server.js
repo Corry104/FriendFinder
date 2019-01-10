@@ -45,7 +45,7 @@ module.exports = function(app) {
 
 
 app.listen(PORT, function() {
-  console.log("App listening on PORT: " + PORT);
+  console.log("Server listening on: http://localhost:" + PORT);
 });
 
 
