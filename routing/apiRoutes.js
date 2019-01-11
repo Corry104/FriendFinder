@@ -1,7 +1,4 @@
-// ===============================================================================
-// DEPENDENCIES
-// We need to include the path package to get the correct file path for our html
-// ===============================================================================
+
 var path = require("path");
 var friends = require("../app/data/friends");
 var express = require("express");
@@ -9,37 +6,27 @@ var app = express();
 
 module.exports = function (app) {
   
-  app.get("/survey", function (req, res) {
-    res.sendFile(path.join(__dirname, "../public/survey.html"));
-  });
-
-  // If no matching route is found default to home
-  app.get("*", function (req, res) {
-    res.sendFile(path.join(__dirname, "../public/home.html"));
-  });
-
   app.get("/api/friends", function (req, res) {
     res.json(friends);
   });
 
-  //needs testing
   app.post("/api/friends", function (req, res) {
-    let foundFriend;
+    let userResponse = req.body.scores;
+    console.log(req.body);
     let minDiff = 99999;
-
-    var userAnswers = req.body;
-
-    userAnswer.routeName = friends.name.replace(/\s+/g, "").toLowerCase();
+    let foundFriend;
 
     for (let i = 0; i < friends.length; i++) {
       let totDiff = 0;
-      for (let j = 0; j < 10; j++) {
-        totDiff += Math.abs(friends[i].ans[j] - userAnswers[j]);
+      for (let j = 0; j < userResponse; j++) {
+        totDiff += Math.abs(friends[i].scores[j] - userResponse[j]);
       }
-      if (totDiff <= minDiff) {
-        minDiff = totDiff;
+      if (totDiff <= minDiff){
         foundFriend = friends[i];
-      }
+        minDiff = totDiff;
+    }
+    console.log(friends[i] + " has a totDiff score of "+ totDiff);
+    console.log("The closest match is currently " + foundFriend + " with a minDiff of " + minDiff);
     }
     res.json(foundFriend);
   });

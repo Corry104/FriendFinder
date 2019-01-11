@@ -2,20 +2,20 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>FriendFinder</title>
+    <meta charset="UTF-8">
+    <title>FriendFinder</title>
 
-  <!-- Latest compiled and minified CSS & JS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!-- Latest compiled and minified CSS & JS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-  <!-- Font Awesome Glyphicons -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <!-- Font Awesome Glyphicons -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 
-  <!-- Chosen -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+    <!-- Chosen -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
 
 </head>
 
@@ -154,14 +154,17 @@
         <br>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit"><i class="fa fa-check-circle"aria-hidden="true"></i> Submit</button>
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit"><i class="fa fa-check-circle"
+                aria-hidden="true"></i> Submit</button>
         <div id="myModal" class="modal">
-        
-            <!-- Modal content -->
             <div class="modal-content">
-                <span class="close">&times;</span>
-                <p></p>
-                <img class="modal-content" id="img01">
+                <h3>Closest Match</h3>
+            <div class="divider"></div>
+                <p id="newFriend"></p>
+                <img id="img01" class="materialboxed" width="625" src="" alt="Unable to Load Image">
+            </div>
+            <div class="modal-footer">
+                <a href="/survey" class="modal-action modal-close btn-flat">Find More Friends</a>
             </div>
         </div>
         <hr>
@@ -170,10 +173,54 @@
                 <p><a href="/api/friends">API Friends List</a> | <a href="">GitHub Repo</a></p>
             </div>
         </footer>
-
     </div>
+    <script type="text/javascript">
+        $("#submit").on("click", function () {
+            event.preventDefault();
+            var valid = true;
+            userName = $("#name").val().trim();
+            userPhoto = $("#name").val().trim();
+            if (!userName || !userPhoto) {
+                alert("You must include your name and a link to a photo of yourself.");
+                return;
+            }
 
+            let userScores = [
+                parseInt($("#q1").val()),
+                parseInt($("#q2").val()),
+                parseInt($("#q3").val()),
+                parseInt($("#q4").val()),
+                parseInt($("#q5").val()),
+                parseInt($("#q6").val()),
+                parseInt($("#q7").val()),
+                parseInt($("#q8").val()),
+                parseInt($("#q9").val()),
+                parseInt($("#q10").val())
+            ]
+
+            for (let i = 0; i < userScores.length; i++) {
+                if (!userScores[i]) {
+                    alert("You must answer all questions before continuing.");
+                    return;
+                }
+            }
+
+            var user = {
+                scores: userScores,
+                name: userName,
+                photo: userPhoto
+            }
+
+            $.post("/api/friends", user, function (data) {
+                $("#newFriend").html(data.name);
+                $("#img01").attr("src", data.photo);
+                $("#myModal").modal("toggle");
+
+                $("#name").val("");
+                $("#photo").val("");
+            });
+        });
+    </script>
 </body>
 
 </html>
-
